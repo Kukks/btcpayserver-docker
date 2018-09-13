@@ -19,7 +19,7 @@ namespace DockerGenerator
 				var productionLocation = Path.GetFullPath(Path.Combine(root, "Production"));
 				var testLocation = Path.GetFullPath(Path.Combine(root, "Production-NoReverseProxy"));
 
-				foreach(var proxy in new[] { "nginx", "no-reverseproxy" })
+				foreach(var proxy in new[] { "nginx", "no-reverseproxy", "traefik" })
 				{
 					foreach(var lightning in new[] { "clightning", "" })
 					{
@@ -40,7 +40,11 @@ namespace DockerGenerator
 								composition.SelectedCryptos.Add(ltc);
 								composition.SelectedLN = lightning;
 								composition.SelectedProxy = proxy;
-								new Program().Run(composition, name, proxy == "nginx" ? productionLocation : testLocation);
+								if (composition.SelectedProxy == "traefik")
+								{
+									composition.AdditionalFragments = new []{"traefik-labels"};
+								}
+								new Program().Run(composition, name, new string[] {"nginx", "traefik"}.Contains(proxy)? productionLocation : testLocation);
 							}
 						}
 					}
@@ -67,13 +71,18 @@ namespace DockerGenerator
 			fragmentLocation = Path.GetFullPath(Path.Combine(fragmentLocation, "docker-fragments"));
 
 			var fragments = new List<string>();
-			if(composition.SelectedProxy == "nginx")
+			switch (@composition.SelectedProxy)
 			{
-				fragments.Add("nginx");
-			}
-			else
-			{
-				fragments.Add("btcpayserver-noreverseproxy");
+				case "nginx":
+
+					fragments.Add("nginx");
+					break;
+				case "traefik":
+					fragments.Add("traefik");
+					break;
+				case "no-reverseproxy":
+					fragments.Add("btcpayserver-noreverseproxy");
+					break;
 			}
 			fragments.Add("btcpayserver");
 			foreach(var crypto in CryptoDefinition.GetDefinitions())

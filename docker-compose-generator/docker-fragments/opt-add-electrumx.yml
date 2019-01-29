@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  electrumx:
+    image: lukechilds/electrumx:v1.8.7
+    environment:
+      REPORT_HOST: ${ELECTRUMX_HOST}
+      DAEMON_URL: bitcoind:43782 
+      LETSENCRYPT_HOST: ${ELECTRUMX_HOST}
+      COIN: Bitcoin
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-<no value>}
+      VIRTUAL_HOST: ${ELECTRUMX_HOST}
+      VIRTUAL_SERVICE_NAME: "electrumx"
+    expose:
+      - "50001"
+      - "50002"
+    volumes:
+      - "electrumx_data:/data"
+
+  btcpayserver:
+      environment:
+          BTCPAY_EXTERNALSERVICES: "ElectrumX:${BTCPAY_PROTOCOL:-https}://${ELECTRUMX_HOST};"
+volumes:
+  electrumx_data:

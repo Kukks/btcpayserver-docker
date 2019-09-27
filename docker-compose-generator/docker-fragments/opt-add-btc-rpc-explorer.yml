@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     image: oktapodia/btc-rpc-explorer
     environment:
+      BTCEXP_COIN: BTC
       RPC_HOST: bitcoind
       RPC_PORT: 43782
       RPC_COOKIEFILE: /nodes/bitcoin/.cookie

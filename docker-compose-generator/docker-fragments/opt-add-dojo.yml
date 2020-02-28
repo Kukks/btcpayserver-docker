@@ -11,7 +11,7 @@ services:
   dojo-db:
     container_name: dojo-db
     restart: on-failure
-    image: mariadb:10.3
+    image: kukks/dojo_db:latest
     environment:
       MYSQL_ROOT_PASSWORD: dojo
       MYSQL_DATABASE: dojo
@@ -24,7 +24,7 @@ services:
   dojo:
     container_name: dojo
     restart: on-failure
-    image: btcpayserver/dojo:1.3.0
+    image: kukks/dojo_nodejs:latest
     expose:
       - "8080"
       - "8081"

@@ -158,6 +158,11 @@ services:
       HIDDENSERVICE_NAME: electrumx
       HIDDENSERVICE_PORT: 50002
       HIDDENSERVICE_VIRTUAL_PORT: 50002
+  dojo:
+    environment:
+      HIDDENSERVICE_NAME: dojo
+      HIDDENSERVICE_PORT: 50002
+      HIDDENSERVICE_VIRTUAL_PORT: 50002
 
 volumes:
     tor_datadir:
